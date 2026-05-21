@@ -1,0 +1,619 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>폴리토피아 시작 방법</title>
+  <meta name="description" content="폴리토피아 초보를 위한 PPT형 시작 가이드" />
+  <style>
+    :root {
+      --bg-1: #07111f;
+      --bg-2: #102c42;
+      --card: rgba(255,255,255,.1);
+      --card-strong: rgba(255,255,255,.18);
+      --text: #f8fbff;
+      --muted: #b9c9d7;
+      --accent: #53d6ff;
+      --accent-2: #a7f06b;
+      --danger: #ff6b7a;
+      --gold: #ffd166;
+      --shadow: 0 30px 80px rgba(0,0,0,.35);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; overflow: hidden; }
+    body {
+      font-family: Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(83,214,255,.28), transparent 32%),
+        radial-gradient(circle at bottom right, rgba(167,240,107,.22), transparent 35%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2));
+      color: var(--text);
+    }
+
+    .deck {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 6vh 6vw;
+      opacity: 0;
+      transform: translateX(44px) scale(.98);
+      pointer-events: none;
+      transition: opacity .35s ease, transform .35s ease;
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .panel {
+      width: min(1120px, 100%);
+      min-height: min(650px, 84vh);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 34px;
+      background: linear-gradient(145deg, rgba(255,255,255,.16), rgba(255,255,255,.06));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      padding: clamp(28px, 5vw, 64px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      width: 460px;
+      height: 460px;
+      right: -210px;
+      top: -190px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(83,214,255,.28), transparent 68%);
+      pointer-events: none;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(83,214,255,.16);
+      border: 1px solid rgba(83,214,255,.28);
+      color: #dff7ff;
+      font-weight: 800;
+      letter-spacing: .02em;
+    }
+
+    h1 {
+      font-size: clamp(44px, 7vw, 86px);
+      line-height: 1.02;
+      margin: 28px 0 18px;
+      letter-spacing: -.06em;
+    }
+
+    h2 {
+      font-size: clamp(36px, 5vw, 62px);
+      line-height: 1.08;
+      margin: 18px 0 28px;
+      letter-spacing: -.045em;
+    }
+
+    p {
+      font-size: clamp(18px, 2.1vw, 28px);
+      line-height: 1.55;
+      color: var(--muted);
+      margin: 0;
+      word-break: keep-all;
+    }
+
+    strong { color: var(--text); }
+    .accent { color: var(--accent); }
+    .green { color: var(--accent-2); }
+    .gold { color: var(--gold); }
+    .danger { color: var(--danger); }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 42px;
+      align-items: center;
+      height: 100%;
+    }
+
+    .map-card {
+      min-height: 430px;
+      border-radius: 28px;
+      background:
+        linear-gradient(135deg, rgba(83,214,255,.2), transparent 44%),
+        linear-gradient(45deg, rgba(167,240,107,.15), transparent 52%),
+        rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.18);
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tile-map {
+      display: grid;
+      grid-template-columns: repeat(6, 46px);
+      gap: 8px;
+      transform: rotate(-4deg);
+    }
+
+    .tile {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      background: rgba(255,255,255,.16);
+      border: 1px solid rgba(255,255,255,.13);
+    }
+    .tile.city { background: rgba(255,209,102,.9); box-shadow: 0 0 28px rgba(255,209,102,.42); }
+    .tile.center { background: rgba(83,214,255,.9); box-shadow: 0 0 28px rgba(83,214,255,.42); }
+    .tile.forest { background: rgba(167,240,107,.62); }
+    .tile.water { background: rgba(83,214,255,.34); }
+    .tile.fog { background: rgba(7,17,31,.72); }
+
+    .big-number {
+      font-size: clamp(70px, 10vw, 140px);
+      font-weight: 950;
+      letter-spacing: -.08em;
+      color: rgba(255,255,255,.12);
+      position: absolute;
+      right: 44px;
+      bottom: 26px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 34px;
+    }
+
+    .card {
+      padding: 24px;
+      border-radius: 24px;
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,.16);
+      min-height: 174px;
+    }
+
+    .card b {
+      display: block;
+      font-size: clamp(20px, 2.1vw, 30px);
+      margin-bottom: 12px;
+      color: var(--text);
+      letter-spacing: -.035em;
+    }
+
+    .card span {
+      display: block;
+      font-size: clamp(15px, 1.45vw, 19px);
+      line-height: 1.55;
+      color: var(--muted);
+      word-break: keep-all;
+    }
+
+    .steps {
+      display: grid;
+      gap: 18px;
+      margin-top: 34px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 70px 1fr;
+      gap: 18px;
+      align-items: start;
+      padding: 20px;
+      border-radius: 22px;
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,.14);
+    }
+
+    .bubble {
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--accent), #7af0ff);
+      color: #06111d;
+      font-weight: 950;
+      font-size: 24px;
+      box-shadow: 0 16px 30px rgba(83,214,255,.22);
+    }
+
+    .step h3 {
+      margin: 0 0 6px;
+      font-size: clamp(20px, 2.2vw, 32px);
+      letter-spacing: -.035em;
+    }
+
+    .step p {
+      font-size: clamp(16px, 1.55vw, 21px);
+      line-height: 1.5;
+    }
+
+    .flow {
+      display: flex;
+      align-items: stretch;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 34px;
+    }
+
+    .flow-item {
+      flex: 1 1 180px;
+      padding: 22px;
+      border-radius: 22px;
+      background: var(--card-strong);
+      border: 1px solid rgba(255,255,255,.18);
+      text-align: center;
+      font-size: clamp(17px, 1.65vw, 24px);
+      font-weight: 900;
+      word-break: keep-all;
+    }
+
+    .arrow {
+      align-self: center;
+      color: var(--accent);
+      font-size: 28px;
+      font-weight: 900;
+    }
+
+    .quote {
+      margin-top: 30px;
+      padding: 28px;
+      border-left: 8px solid var(--accent);
+      border-radius: 22px;
+      background: rgba(83,214,255,.1);
+      font-size: clamp(22px, 2.4vw, 36px);
+      line-height: 1.35;
+      font-weight: 900;
+      letter-spacing: -.04em;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      margin-top: 34px;
+    }
+
+    .mini-title {
+      font-size: clamp(18px, 2vw, 28px);
+      font-weight: 950;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-top: 34px;
+    }
+
+    .turn {
+      padding: 22px 16px;
+      border-radius: 20px;
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,.16);
+      text-align: center;
+    }
+
+    .turn b {
+      display: block;
+      color: var(--accent);
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .turn span {
+      font-size: 17px;
+      color: var(--text);
+      font-weight: 800;
+      word-break: keep-all;
+    }
+
+    .controls {
+      position: fixed;
+      left: 50%;
+      bottom: 22px;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      z-index: 20;
+      background: rgba(0,0,0,.25);
+      border: 1px solid rgba(255,255,255,.16);
+      padding: 10px 12px;
+      border-radius: 999px;
+      backdrop-filter: blur(14px);
+    }
+
+    button {
+      border: 0;
+      color: var(--text);
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.14);
+      min-width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      font-size: 18px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    button:hover { background: rgba(255,255,255,.2); }
+
+    .counter {
+      min-width: 74px;
+      text-align: center;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .progress {
+      position: fixed;
+      left: 0;
+      top: 0;
+      height: 5px;
+      width: 100%;
+      background: rgba(255,255,255,.12);
+      z-index: 30;
+    }
+
+    .bar {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: width .25s ease;
+    }
+
+    .hint {
+      position: fixed;
+      right: 22px;
+      bottom: 30px;
+      color: rgba(255,255,255,.52);
+      font-weight: 700;
+      font-size: 14px;
+      z-index: 10;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    @media (max-width: 820px) {
+      html, body { overflow: auto; }
+      body { min-height: 100%; }
+      .deck { min-height: 100vh; }
+      .slide { padding: 18px; }
+      .panel { min-height: 78vh; border-radius: 26px; padding: 28px; }
+      .hero-grid, .two-col { grid-template-columns: 1fr; }
+      .cards { grid-template-columns: 1fr; }
+      .timeline { grid-template-columns: 1fr; }
+      .arrow { display: none; }
+      .hint { display: none; }
+      .map-card { min-height: 260px; }
+      .tile-map { grid-template-columns: repeat(6, 34px); gap: 6px; }
+      .tile { width: 34px; height: 34px; border-radius: 9px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress"><div class="bar" id="bar"></div></div>
+
+  <main class="deck" id="deck">
+    <section class="slide active">
+      <div class="panel">
+        <div class="hero-grid">
+          <div>
+            <div class="tag">POLYTOPIA START GUIDE</div>
+            <h1>폴리토피아<br><span class="accent">시작 방법</span></h1>
+            <p>초보가 처음부터 안 말리려면 <strong>정찰 · 도시 2렙 · 자원 테크 · 점령 전 구매</strong> 이 4개만 잡으면 된다.</p>
+            <div class="quote">한 줄 결론: 전사 중앙 정찰 → 수도 2렙 → 자원 보고 테크 → 도시 먹기 전 테크 먼저</div>
+          </div>
+          <div class="map-card" aria-label="타일맵 장식">
+            <div class="tile-map">
+              <div class="tile fog"></div><div class="tile forest"></div><div class="tile"></div><div class="tile water"></div><div class="tile fog"></div><div class="tile"></div>
+              <div class="tile"></div><div class="tile city"></div><div class="tile forest"></div><div class="tile"></div><div class="tile water"></div><div class="tile fog"></div>
+              <div class="tile forest"></div><div class="tile"></div><div class="tile center"></div><div class="tile forest"></div><div class="tile"></div><div class="tile water"></div>
+              <div class="tile fog"></div><div class="tile forest"></div><div class="tile"></div><div class="tile city"></div><div class="tile"></div><div class="tile fog"></div>
+              <div class="tile water"></div><div class="tile"></div><div class="tile forest"></div><div class="tile"></div><div class="tile water"></div><div class="tile"></div>
+            </div>
+          </div>
+        </div>
+        <div class="big-number">01</div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="panel">
+        <div class="tag">BASIC RULE</div>
+        <h2>초반 운영 핵심 3개</h2>
+        <p>처음부터 모든 테크를 다 찍으려 하면 돈이 녹는다. 초반은 <strong>도시 수입을 빠르게 키우고</strong>, 필요한 테크만 골라서 확장하는 게 핵심이다.</p>
+        <div class="cards">
+          <div class="card"><b>① 중앙 정찰</b><span>첫 전사는 맵 중앙 쪽으로 보내서 마을과 적 위치를 빨리 찾는다.</span></div>
+          <div class="card"><b>② 수도 2렙</b><span>가능하면 시작 자원으로 수도 2레벨을 먼저 찍어 수입을 늘린다.</span></div>
+          <div class="card"><b>③ 필요한 테크만</b><span>자원 배치를 보고 사냥, 임업, 농사 같은 루트를 고른다.</span></div>
+        </div>
+        <div class="big-number">02</div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="panel">
+        <div class="tag">TURN 0</div>
+        <h2>첫 전사는 <span class="accent">중앙</span>으로 보내라</h2>
+        <div class="steps">
+          <div class="step"><div class="bubble">1</div><div><h3>중앙 방향으로 이동</h3><p>중앙 근처 도시는 보통 확장과 전쟁의 핵심이 된다. 먼저 찾는 쪽이 템포를 잡는다.</p></div></div>
+          <div class="step"><div class="bubble">2</div><div><h3>마을 위치 확인</h3><p>초반 목표는 싸움이 아니라 마을 찾기다. 도시 하나 더 먹으면 수입 구조가 확 달라진다.</p></div></div>
+          <div class="step"><div class="bubble">3</div><div><h3>안개를 직접 까기</h3><p>나중에 탐험가를 쓸 때 원하는 방향으로 보내려면 주변 안개 정리도 중요하다.</p></div></div>
+        </div>
+        <div class="big-number">03</div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="panel">
+        <div class="tag">CITY LEVEL</div>
+        <h2>도시 2레벨이 <span class="green">최우선</span></h2>
+        <p>초반에 수입이 낮으면 유닛도 못 뽑고 테크도 못 산다. 그래서 시작 자원으로 가능하면 수도를 2레벨로 올리는 게 안정적이다.</p>
+        <div class="two-col">
+          <div class="card"><div class="mini-title">바로 2렙 가능</div><span>수도 레벨업 먼저 → 다음 턴 수입으로 전사 추가 → 확장 시작</span></div>
+          <div class="card"><div class="mini-title">바로 2렙 불가능</div><span>전사 하나 더 뽑기 → 정찰 범위 늘리기 → 마을 빠르게 찾기</span></div>
+        </div>
+        <div class="quote">도시 2렙은 “돈 버는 엔진”이다. 이거 늦으면 뒤에서 계속 말린다.</div>
+        <div class="big-number">04</div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="panel">
+        <div class="tag">TECH ROUTE</div>
+        <h2>테크는 <span class="gold">자원 보고</span> 골라라</h2>
+        <p>정답 빌드 하나만 외우는 것보다, 내 주변 자원에 맞춰서 테크를 찍는 게 훨씬 세다.</p>
+        <div class="cards">
+          <div class="card"><b>동물 + 숲 많음</b><span><strong>사냥 → 임업</strong> 루트가 좋다. 숲 자원이 많으면 도시 성장 속도가 빨라진다.</span></div>
+          <div class="card"><b>열매 많음</b><span><strong>조직</strong> 계열로 수도 2렙을 쉽게 만들 수 있다. 초반 안정성이 높다.</span></div>
+          <div class="card"><b>빈 땅 / 밭 의심</b><span>농사 루트도 생각할 만하다. 밭은 관련 테크가 있어야 보이는 경우가 있다.</span></div>
+        </div>
+        <div class="big-number">05</div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="panel">
+        <div class="tag">IMPORTANT TIP</div>
+        <h2>도시 먹기 전에 <span class="danger">테크 먼저</span> 사라</h2>
+        <p>도시를 점령하면 테크 가격이 오른다. 그래서 다음에 살 테크가 확실하면 <strong>도시 점령 직전에 먼저 구매</strong>하는 게 이득이다.</p>
+        <div class="cards">
+          <div class="card"><b>1티어 테크</b><span>도시가 늘수록 가격이 조금씩 오른다. 초반엔 1~2원 차이도 크다.</span></div>
+          <div class="card"><b>2티어 테크</b><span>도시 수 증가에 따른 부담이 더 커진다. 점령 전 구매가 더 중요하다.</span></div>
+          <div class="card"><b>판단 기준</b><span>“어차피 다음 턴에 살 테크”면 지금 사는 게 보통 더 낫다.</span></div>
+        </div>
+        <div class="big-number">06</div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="panel">
+        <div class="tag">OPENING FLOW</div>
+        <h2>초반 턴 흐름</h2>
+        <p>복잡하게 외우지 말고 이 순서만 기억하면 된다. 상황이 꼬이면 <strong>도시 성장과 정찰</strong> 쪽으로 다시 돌아오면 된다.</p>
+        <div class="timeline">
+          <div class="turn"><b>0턴</b><span>전사 중앙 정찰</span></div>
+          <div class="turn"><b>0~1턴</b><span>가능하면 수도 2렙</span></div>
+          <div class="turn"><b>1턴</b><span>전사 추가 생산</span></div>
+          <div class="turn"><b>2~4턴</b><span>마을 찾기</span></div>
+          <div class="turn"><b>점령 직전</b><span>필요 테크 구매</span></div>
+        </div>
+        <div class="flow">
+          <div class="flow-item">정찰</div><div class="arrow">→</div>
+          <div class="flow-item">수입 확보</div><div class="arrow">→</div>
+          <div class="flow-item">테크 선택</div><div class="arrow">→</div>
+          <div class="flow-item">도시 점령</div>
+        </div>
+        <div class="big-number">07</div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="panel">
+        <div class="tag">EXPLORER</div>
+        <h2>도시 2렙 보상은 <span class="accent">탐험가</span>도 강하다</h2>
+        <p>탐험가는 주변 안개를 밝혀서 적 위치, 도시 위치, 바다 구조를 빨리 보게 해준다. 초반 조우 보너스까지 받으면 돈 템포가 미친 듯이 빨라진다.</p>
+        <div class="steps">
+          <div class="step"><div class="bubble">✓</div><div><h3>안개를 유도해라</h3><p>유닛으로 근처 안개를 미리 까두면 탐험가가 더 멀리, 더 필요한 방향으로 갈 가능성이 높다.</p></div></div>
+          <div class="step"><div class="bubble">✓</div><div><h3>적을 빨리 만나라</h3><p>부족 조우 보너스는 초반 테크와 유닛 생산을 땡기는 데 도움이 된다.</p></div></div>
+        </div>
+        <div class="big-number">08</div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="panel">
+        <div class="tag">DON'T DO THIS</div>
+        <h2>초보가 자주 망하는 패턴</h2>
+        <div class="cards">
+          <div class="card"><b>테크 다 찍기</b><span>필요 없는 테크까지 사면 정작 유닛과 도시 성장에 쓸 돈이 사라진다.</span></div>
+          <div class="card"><b>수도 방치</b><span>도시 레벨업이 늦으면 별 수입이 낮아서 후반까지 계속 끌려간다.</span></div>
+          <div class="card"><b>정찰 부족</b><span>마을을 늦게 찾으면 확장 템포가 죽고 상대가 먼저 중심을 먹는다.</span></div>
+        </div>
+        <div class="quote">초반은 화려한 전략보다 “돈 안 말리기”가 먼저다.</div>
+        <div class="big-number">09</div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="panel">
+        <div class="tag">FINAL SUMMARY</div>
+        <h2>진짜 이것만 외워라</h2>
+        <div class="steps">
+          <div class="step"><div class="bubble">1</div><div><h3>전사는 중앙으로</h3><p>마을과 적 위치를 빨리 찾아서 맵 주도권을 잡는다.</p></div></div>
+          <div class="step"><div class="bubble">2</div><div><h3>수도 2렙 먼저</h3><p>수입을 올려야 테크도 사고 유닛도 뽑는다.</p></div></div>
+          <div class="step"><div class="bubble">3</div><div><h3>도시 먹기 전 테크 구매</h3><p>점령 후 가격이 오르니까 살 거면 점령 전에 산다.</p></div></div>
+        </div>
+        <div class="quote">정찰 → 성장 → 필요한 테크 → 확장. 이 순서면 초반 개같이 안 터진다.</div>
+        <div class="big-number">10</div>
+      </div>
+    </section>
+  </main>
+
+  <div class="controls">
+    <button id="prev" aria-label="이전 슬라이드">‹</button>
+    <div class="counter"><span id="now">1</span> / <span id="total">10</span></div>
+    <button id="next" aria-label="다음 슬라이드">›</button>
+  </div>
+  <div class="hint">← → / Space 로 넘기기</div>
+
+  <script>
+    const slides = [...document.querySelectorAll('.slide')];
+    const now = document.getElementById('now');
+    const total = document.getElementById('total');
+    const bar = document.getElementById('bar');
+    const prev = document.getElementById('prev');
+    const next = document.getElementById('next');
+
+    let index = 0;
+    total.textContent = slides.length;
+
+    function showSlide(nextIndex) {
+      index = (nextIndex + slides.length) % slides.length;
+      slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+      now.textContent = index + 1;
+      bar.style.width = `${((index + 1) / slides.length) * 100}%`;
+      location.hash = `slide-${index + 1}`;
+    }
+
+    prev.addEventListener('click', () => showSlide(index - 1));
+    next.addEventListener('click', () => showSlide(index + 1));
+
+    window.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight' || event.key === ' ') showSlide(index + 1);
+      if (event.key === 'ArrowLeft') showSlide(index - 1);
+      if (event.key === 'Home') showSlide(0);
+      if (event.key === 'End') showSlide(slides.length - 1);
+    });
+
+    const hashMatch = location.hash.match(/slide-(\d+)/);
+    if (hashMatch) {
+      const target = Number(hashMatch[1]) - 1;
+      if (!Number.isNaN(target) && target >= 0 && target < slides.length) index = target;
+    }
+    showSlide(index);
+  </script>
+</body>
+</html>
